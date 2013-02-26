@@ -1,0 +1,30 @@
+pyPCT
+======
+
+Collection of Python modules for analyzing, processing, and converting reconstructed proton CT images.
+
+### Authors ###
+
+- Ford Hurley (ford.hurley@gmail.com)
+
+
+### Dependencies ###
+
+- `numpy`: http://numpy.scipy.org/
+- `matplotlib`: http://matplotlib.org/
+- `pyDICOM`: http://code.google.com/p/pydicom/
+
+
+### Modules ###
+
+#### image ####
+
+Provides classes for storing pCT images/slices as arrays. Can read in text formatted images (as outputted by the Penfold code).  
+
+#### roi ####
+
+Region of interest classes. Most image analysis is done here.
+
+#### ctconvert ####
+
+Used to convert DICOM formatted x-ray CT images into text images, with values of Hounsfield Units (HU) or relative stopping power (RSP).
