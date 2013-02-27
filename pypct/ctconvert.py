@@ -1,6 +1,8 @@
-# Tools for converting x-ray CT DICOM files to RSP
+'''
+Tools for converting x-ray CT DICOM files to RSP
 
-# TODO: return a pypct Image object, with sorted slices (need to look at slice number in DICOM file)
+TODO: return a pypct Image object, with sorted slices (need to look at slice number in DICOM file)
+'''
 
 import dicom
 from numpy import *

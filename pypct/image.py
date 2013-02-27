@@ -1,3 +1,9 @@
+'''
+Proton CT image objects. Provides Slice and Image (array of Slices) classes.
+
+These are very imcomplete, but could be extended to be pretty powerful with a little work.
+'''
+
 import numpy as np
 import matplotlib.pyplot as plot
 import matplotlib as mpl

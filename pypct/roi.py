@@ -1,3 +1,16 @@
+'''
+Region of interest objects. 
+
+A region of interest (ROI) is a geometric area of an image that should 
+be analyzed. Most of the work is done by creating "array masks" that can 
+be applied to images (numpy arrays) to select only specific pixels.
+
+More types of regions need to be added (e.g., rotated rectangle) along 
+with more analysis methods. If many analysis methods are added, it may 
+make more sense to move those out of the ROI objects to keep them from 
+getting too cluttered.
+'''
+
 import numpy as np
 import matplotlib.pyplot as plot
 import matplotlib as mpl
@@ -35,6 +48,12 @@ class ROI(object):
 		plot.xlabel('RSP')
 		plot.title(self.name)
 		plot.show()
+	
+	def makeArrayMask(self):
+		raise NotImplementedError
+	
+	def getOverlayPatch(self):
+		raise NotImplementedError
 
 class CircleROI(ROI):
 	'''Circular ROI

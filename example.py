@@ -6,15 +6,23 @@ import matplotlib.pyplot as plot
 import pypct.roi as pctroi
 import pypct.image as pctimage
 
-import os
+import os, errno
 
-nameformat = 'example/lucy_scan4_newcal_2012-05-25b_i{iteration:02d}_s{slicenum:02d}.txt'
+nameformat = 'lucy_scan4_newcal_2012-05-25b_i{iteration:02d}_s{slicenum:02d}.txt'
+outputdir = 'example'
+
+try: 
+	os.mkdir(outputdir)
+except OSError as e: 
+	if e.errno == errno.EEXIST:
+		# directory already exists
+		pass 
+	else:
+		# some other error occured, reraise it
+		raise e
 
 iterations = [8]
 slicenums = [10]
-
-currentpath = os.path.dirname(__file__)
-print currentpath
 
 images = []
 for iteration in iterations:
@@ -52,8 +60,10 @@ for region in regions:
 	
 line = pctroi.RectangleROI('line', (0, 77), (256, 3), imageshape)
 images[0].plotSlice(slicenums[0], line).savefig(os.path.join(currentpath, 'example', line.name + '.png'))
-line.plotLineProfile(images[0].getSlice(slicenums[0]).pixels, axis=0).savefig(os.path.join(currentpath, 'example', line.name + '-profile.png'))
+figname = os.path.join(currentpath, 'example', line.name + '-profile.png')
+line.plotLineProfile(images[0].getSlice(slicenums[0]).pixels, axis=0).savefig(figname)
 
 circle = pctroi.CircleROI('circle', (80, 79), 15, imageshape)
 images[0].plotSlice(slicenums[0], circle).savefig(os.path.join(currentpath, 'example', circle.name + '.png'))
-circle.plotRadialProfile(images[0].getSlice(slicenums[0]).pixels).savefig(os.path.join(currentpath, 'example', circle.name + '-profile.png'))
+figname = os.path.join(currentpath, 'example', circle.name + '-profile.png')
+circle.plotRadialProfile(images[0].getSlice(slicenums[0]).pixels).savefig(figname)
