@@ -1,8 +1,25 @@
-'''
+"""
 Tools for converting x-ray CT DICOM files to RSP
 
 TODO: return a pypct Image object, with sorted slices (need to look at slice number in DICOM file)
-'''
+
+================
+
+Copyright (C) 2013 Ford Hurley, ford.hurley@gmail.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 import dicom
 from numpy import *
@@ -52,14 +69,14 @@ def processDicomFile(filename, create_hu_file=False, create_rsp_file=True):
     return rsp_data
 
 def processDicomDirectory(dirname, extension='.dcm'):
-	'''Open all files in dirname with extension.
-	Returns a 3D array of RSP values. Indices are: [x (horiz)][y (vert)][z (slice)]
-	'''
-	stack = []
-	filelist = os.listdir(dirname)
-	for filename in filelist:
-		if filename[-4:] == extension:
-			stack.append(processDicomFile(dirname + '/' + filename))
-	stack = dstack(stack)
-	return stack
-	
+    '''Open all files in dirname with extension.
+    Returns a 3D array of RSP values. Indices are: [x (horiz)][y (vert)][z (slice)]
+    '''
+    stack = []
+    filelist = os.listdir(dirname)
+    for filename in filelist:
+        if filename[-4:] == extension:
+            stack.append(processDicomFile(dirname + '/' + filename))
+    stack = dstack(stack)
+    return stack
+    

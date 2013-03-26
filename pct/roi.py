@@ -1,4 +1,4 @@
-'''
+"""
 Region of interest objects. 
 
 A region of interest (ROI) is a geometric area of an image that should 
@@ -9,7 +9,24 @@ More types of regions need to be added (e.g., rotated rectangle) along
 with more analysis methods. If many analysis methods are added, it may 
 make more sense to move those out of the ROI objects to keep them from 
 getting too cluttered.
-'''
+
+=================
+
+Copyright (C) 2013 Ford Hurley, ford.hurley@gmail.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 import numpy as np
 import matplotlib.pyplot as plot
