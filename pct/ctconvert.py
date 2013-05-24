@@ -20,9 +20,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import os
 
 import dicom
-from numpy import *
+import numpy as np
+
 import image
 
 hu_conv = ((0.0, 0.0),
@@ -40,32 +42,24 @@ def convertToRSP(hu_value):
             return rsp
     return 0
 
-def processDicomFile(filename, create_hu_file=False, create_rsp_file=True):
-    '''Open the named dicom file, and create text files containing pixel data. 
-    Returns an array containing RSP values.
+def loadDicomFile(filename, convert_to_rsp=False):
     '''
-    print 'Processing', filename
-    
+    Open the named dicom file. Optionally convert to RSP.
+    Returns a numpy array containing RSP values.
+    '''    
     slice = dicom.read_file(filename)
     im = slice.pixel_array
     slice_num = slice.InstanceNumber
 
-    rsp_data = zeros((im.shape[0], im.shape[1]))
-
-    if create_hu_file: outfile_hu = open('hu-s%d.txt' % slice_num, 'w')
-    if create_rsp_file: outfile_rsp = open('rsp-s%d.txt' % slice_num, 'w')
+    pixel_array = np.zeros((im.shape[0], im.shape[1]))
     
     for i in range(im.shape[0]):
         for j in range(im.shape[1]):
-            if create_hu_file: outfile_hu.write('%f ' % im[i][j])
-            rsp_data[i][j] = convertToRSP(float(im[i][j]))
-            if create_rsp_file: outfile_rsp.write('%f ' % rsp_data[i][j])
-        if create_hu_file: outfile_hu.write('\n')
-        if create_rsp_file: outfile_rsp.write('\n')
+            if convert_to_rsp:
+                pixel_array[i][j] = convertToRSP(float(im[i][j]))
+            else:
+                pixel_array[i][j] = float(im[i][j])
     
-    if create_hu_file: outfile_hu.close()
-    if create_rsp_file: outfile_rsp.close()
-
     return rsp_data
 
 def processDicomDirectory(dirname, extension='.dcm'):
@@ -76,7 +70,7 @@ def processDicomDirectory(dirname, extension='.dcm'):
     filelist = os.listdir(dirname)
     for filename in filelist:
         if filename[-4:] == extension:
-            stack.append(processDicomFile(dirname + '/' + filename))
-    stack = dstack(stack)
+            stack.append(loadDicomFile(dirname + '/' + filename))
+    stack = np.dstack(stack)
     return stack
     
