@@ -1,7 +1,5 @@
 """
-Tools for converting x-ray CT DICOM files to RSP
-
-TODO: return a pypct Image object, with sorted slices (need to look at slice number in DICOM file)
+Tools for loading DICOM images from CT scans.
 
 ================
 
@@ -25,8 +23,6 @@ import os
 import dicom
 import numpy as np
 
-import image
-
 hu_conv = ((0.0, 0.0),
            (800.0, 0.8),
            (900.0, 0.95),
@@ -45,7 +41,7 @@ def convertToRSP(hu_value):
 def loadDicomFile(filename, convert_to_rsp=False):
     '''
     Open the named dicom file. Optionally convert to RSP.
-    Returns a numpy array containing RSP values.
+    Returns a numpy array containing pixel values.
     '''    
     slice = dicom.read_file(filename)
     im = slice.pixel_array
@@ -60,11 +56,12 @@ def loadDicomFile(filename, convert_to_rsp=False):
             else:
                 pixel_array[i][j] = float(im[i][j])
     
-    return rsp_data
+    return pixel_array
 
 def processDicomDirectory(dirname, extension='.dcm'):
-    '''Open all files in dirname with extension.
-    Returns a 3D array of RSP values. Indices are: [x (horiz)][y (vert)][z (slice)]
+    '''
+    Open all files in dirname with extension.
+    Returns a 3D array of pixel values. Indices are: [x (horiz)][y (vert)][z (slice)]
     '''
     stack = []
     filelist = os.listdir(dirname)
