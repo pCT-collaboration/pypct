@@ -31,6 +31,7 @@ import pct.ctload
 
 inputdir = 'Z:/Downloads/handCT_20120724'
 convert_to_rsp = True
+voxel_size = (270.0 / 512, 270.0 / 512, 200.0 / 209)
 
 start = time.time()
 
@@ -55,9 +56,31 @@ pyplot.xlabel('x (pixel)')
 pyplot.ylabel('y (pixel)')
 cbar = pyplot.colorbar()
 cbar.set_label('RSP' if convert_to_rsp else 'HU')
-
 #pyplot.show()
 
 slicenum = 110
 outfile = '{}/slice{}-{:03d}.txt'.format(inputdir, '-rsp' if convert_to_rsp else '', slicenum)
 pct.ctload.dumpSlice(voxels[:, :, slicenum], outfile)
+
+mask = np.loadtxt(inputdir + '/mask.txt', dtype=bool)
+projection = np.empty((voxels.shape[2], voxels.shape[0]))
+for slicenum in xrange(voxels.shape[2]):
+    slice = voxels[:, :, slicenum]
+    for row in xrange(slice.shape[0]):
+        total = 0.0
+        for col in xrange(slice.shape[1]):
+            if mask[col, row]:
+                total += slice[col, row] * voxel_size[1]
+        projection[slicenum, row] = total
+
+fig = pyplot.figure()
+ax = fig.add_subplot(1, 1, 1)
+imgplot = pyplot.imshow(projection, cmap='gray', interpolation='nearest')
+pyplot.xlabel('x (pixel)')
+pyplot.ylabel('y (pixel)')
+cbar = pyplot.colorbar()
+cbar.set_label('WEPL (mm)' if convert_to_rsp else '')
+pyplot.show()
+
+outfile = '{}/projection{}.txt'.format(inputdir, '-rsp' if convert_to_rsp else '')
+pct.ctload.dumpSlice(projection, outfile)
