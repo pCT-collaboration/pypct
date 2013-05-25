@@ -76,3 +76,9 @@ def processDicomDirectory(dirname, extension='.dcm', convert_to_rsp=True):
             print 'Loaded slice {}'.format(slice_num)
     
     return np.dstack(stack)
+
+def dumpSlice(pixel_array, filename):
+    '''
+    Write the pixel data to a text file.
+    '''
+    np.savetxt(filename, pixel_array)

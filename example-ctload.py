@@ -50,10 +50,14 @@ print 'Took {:.4f}s total time'.format(stop - start)
 
 fig = pyplot.figure()
 ax = fig.add_subplot(1, 1, 1)
-imgplot = pyplot.imshow(voxels[:, :, 100], cmap='gray', interpolation='nearest')
+imgplot = pyplot.imshow(voxels[:, :, 110], cmap='gray', interpolation='nearest')
 pyplot.xlabel('x (pixel)')
 pyplot.ylabel('y (pixel)')
 cbar = pyplot.colorbar()
 cbar.set_label('RSP' if convert_to_rsp else 'HU')
 
-pyplot.show()
+#pyplot.show()
+
+slicenum = 110
+outfile = '{}/slice{}-{:03d}.txt'.format(inputdir, '-rsp' if convert_to_rsp else '', slicenum)
+pct.ctload.dumpSlice(voxels[:, :, slicenum], outfile)
