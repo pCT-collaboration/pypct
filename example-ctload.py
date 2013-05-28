@@ -31,10 +31,10 @@ import pct.ctload
 
 inputdir = 'Z:/Downloads/handCT_20120724'
 convert_to_rsp = True
-voxel_size = (270.0 / 512, 270.0 / 512, 200.0 / 209)
+voxel_size = (270.0 / 512, 270.0 / 512, 0.625)
+slicenum = 110
 
 start = time.time()
-
 numpy_file = '{}/voxels{}.npy'.format(inputdir, '-rsp' if convert_to_rsp else '')
 try:
     print 'Loading voxel array from', numpy_file
@@ -45,23 +45,29 @@ except:
         print 'This may take a while...'
     voxels = pct.ctload.processDicomDirectory(inputdir, convert_to_rsp=convert_to_rsp)
     np.save(numpy_file, voxels)
-    
 stop = time.time()
 print 'Took {:.4f}s total time'.format(stop - start)
 
 fig = pyplot.figure()
 ax = fig.add_subplot(1, 1, 1)
-imgplot = pyplot.imshow(voxels[:, :, 110], cmap='gray', interpolation='nearest')
+imgplot = pyplot.imshow(voxels[:, :, slicenum], cmap='gray', interpolation='nearest')
 pyplot.xlabel('x (pixel)')
 pyplot.ylabel('y (pixel)')
 cbar = pyplot.colorbar()
 cbar.set_label('RSP' if convert_to_rsp else 'HU')
 #pyplot.show()
 
-slicenum = 110
-outfile = '{}/slice{}-{:03d}.txt'.format(inputdir, '-rsp' if convert_to_rsp else '', slicenum)
-pct.ctload.dumpSlice(voxels[:, :, slicenum], outfile)
 
+outfile = '{}/slice{}-{:03d}.txt'.format(inputdir, '-rsp' if convert_to_rsp else '', slicenum)
+print 'Dumping slice {} to {}'.format(slicenum, outfile)
+start = time.time()
+pct.ctload.dumpSlice(voxels[:, :, slicenum], outfile)
+stop = time.time()
+print 'Took {:.4f}s total time'.format(stop - start)
+
+
+print 'Creating projection along y-axis'
+start = time.time()
 mask = np.loadtxt(inputdir + '/mask.txt', dtype=bool)
 projection = np.empty((voxels.shape[2], voxels.shape[0]))
 for slicenum in xrange(voxels.shape[2]):
@@ -72,15 +78,23 @@ for slicenum in xrange(voxels.shape[2]):
             if mask[col, row]:
                 total += slice[col, row] * voxel_size[1]
         projection[slicenum, row] = total
+stop = time.time()
+print 'Took {:.4f}s total time'.format(stop - start)
 
 fig = pyplot.figure()
 ax = fig.add_subplot(1, 1, 1)
 imgplot = pyplot.imshow(projection, cmap='gray', interpolation='nearest')
 pyplot.xlabel('x (pixel)')
-pyplot.ylabel('y (pixel)')
+pyplot.ylabel('z (pixel)')
 cbar = pyplot.colorbar()
 cbar.set_label('WEPL (mm)' if convert_to_rsp else '')
-pyplot.show()
+
 
 outfile = '{}/projection{}.txt'.format(inputdir, '-rsp' if convert_to_rsp else '')
+print 'Dumping projection to {}'.format(outfile)
+start = time.time()
 pct.ctload.dumpSlice(projection, outfile)
+stop = time.time()
+print 'Took {:.4f}s total time'.format(stop - start)
+
+pyplot.show()
