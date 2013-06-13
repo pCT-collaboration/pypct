@@ -34,11 +34,9 @@ try:
 	os.mkdir(outputdir)
 except OSError as e: 
 	if e.errno == errno.EEXIST:
-		# directory already exists
-		pass 
+		pass    # directory already exists
 	else:
-		# some other error occured, reraise it
-		raise e
+		raise e # some other error occured, reraise it
 
 iterations = [8]
 slicenums = [10]
