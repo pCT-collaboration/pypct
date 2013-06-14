@@ -43,12 +43,13 @@ formats. For help, run:
 
 ### How to use ###
 
-One good way to use the modules would be to check out the repository, then add a symlink 
-to the pct folder in your python's 'site-packages' directory:
-
+One good way to use the modules would be to check out the repository.
     git clone https://github.com/fordhurley/pypct.git
-    cd pypct
-    ln -s pct /usr/local/lib/python2.7/pct
 
-This will allow you to 'import pct' from a script run anywhere on the computer, and still 
-take advantage of any updates you make to to package or get from an `git pull`.
+Then set the following shell variable (including it in .bashrc for a
+perminant fix.
+    export PYTHONPATH=~/pCT/pypct
+
+This will allow you to 'import pct' from a script run anywhere on the computer,
+and still take advantage of any updates you make to to package or get from an
+`git pull`.

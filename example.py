@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
 import matplotlib.pyplot as plot
-import os, errno
-
+import os, errno, sys
+sys.path.append('/home/nick/pCT/pypct')
 import pct
 
 nameformat = 'lucy_scan4_newcal_2012-05-25b_i{iteration:02d}_s{slicenum:02d}.txt'
@@ -41,6 +41,7 @@ except OSError as e:
 iterations = [8]
 slicenums = [10]
 
+#Initialize image array
 images = []
 for iteration in iterations:
 	image = pct.image.Image(iteration)
@@ -56,7 +57,7 @@ imageshape = None
 for image in images:
 	if imageshape != None and imageshape != image.shape:
 		raise Exception("Dimensions of images do not match!")
-	imageshape = image.shape
+    imageshape = image.shape #WARNING: overwritten repeatedly
 
 regions = []
 regions.append(pct.roi.RectangleROI('poly1', (103, 51), (51, 55), imageshape))
@@ -66,6 +67,7 @@ regions.append(pct.roi.CircleROI('bone', (176, 175), 4, imageshape))
 
 images[0].plotSlice(slicenums[0], regions).savefig(os.path.join(currentpath, 'example', 'regions.png'))
 
+#Display info
 for region in regions:
 	print region.name
 	print '%4s %5s %6s %6s' % ('Iter', 'Slice', 'Mean', 'RMS')
